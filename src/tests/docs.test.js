@@ -39,6 +39,22 @@ test('README embeds all three full-resolution documentation illustrations', asyn
   assert.ok(russian.includes('[English](README.md)'));
 });
 
+test('English documentation and descriptions remain the defaults with Russian kept separately', async () => {
+  const readme=await readFile(new URL('README.md',root),'utf8');
+  const russian=await readFile(new URL('README.ru.md',root),'utf8');
+  const manifest=JSON.parse(await readFile(new URL('package.json',root),'utf8'));
+  const locale=JSON.parse(await readFile(new URL('locale/en.json',root),'utf8'));
+  assert.match(readme,/^# LLM quotas for DeepSeek Harness/m);
+  assert.ok(readme.includes('English (default)'));
+  assert.ok(readme.includes('English is the default language'));
+  assert.match(russian,/^# Квоты LLM для DeepSeek Harness/m);
+  assert.ok(manifest.files.includes('README.ru.md'));
+  for(const text of [manifest.description,locale.meta.title,locale.meta.description]) {
+    assert.ok(typeof text==='string' && text.length>0);
+    assert.doesNotMatch(text,/[\u0400-\u04ff]/);
+  }
+});
+
 test('documentation images carry only synthetic-data metadata and no captured EXIF', async () => {
   for(const [name] of images) {
     const data=await readFile(new URL(`docs/images/${name}`,root));

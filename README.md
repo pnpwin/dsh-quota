@@ -1,10 +1,14 @@
 # LLM quotas for DeepSeek Harness
 
-English · [Русский](README.ru.md) · MIT · Host + Web Client
+English (default) · [Русский](README.ru.md) · MIT · Host + Web Client
 
 **Inspired by [hermes-quota-plugin](https://github.com/rarf/hermes-quota-plugin/) by [rarf](https://github.com/rarf).** The status chips, layered quota views and provider API research informed this independent DSH implementation. Hermes credential discovery is deliberately not included. MIT attribution: © 2026 rarf.
 
 Show provider balances and subscription limits using **only providers and stored authorization configured in Settings → Models**. Credentials stay on the Host.
+
+## Languages
+
+English is the default language for this README, package descriptions, repository metadata and release notes. Russian documentation is maintained separately in [README.ru.md](README.ru.md). The plugin's Russian UI translation remains available through the DSH locale setting; it does not replace the English defaults.
 
 ## Interface
 
@@ -90,7 +94,7 @@ Tests use `node:test` with synthetic fixtures and mocked network / credential se
 
 No context-saving or token-reduction benchmark is claimed. Byte sizes, synthetic counters and heuristic estimates are not actual provider-reported token measurements. Provider quota data in the running plugin comes from provider endpoints, not from these example images or a session-token estimate.
 
-The current suite has 46 tests. The immutable v1.0.0 runtime release originally shipped 43; subsequent documentation checks are on the main branch. Changing display settings remounts the Host plugin, so an already-running agent turn may need a fresh turn to regain its newly registered tool definition.
+The current suite has 47 tests. The immutable v1.0.0 runtime release originally shipped 43; subsequent documentation checks are on the main branch. Changing display settings remounts the Host plugin, so an already-running agent turn may need a fresh turn to regain its newly registered tool definition.
 
 ## References
 
