@@ -57,6 +57,8 @@ Balances, API-key budgets and subscription windows are different metrics. Curren
 
 See [provider adapters](src/providers.js) for the implemented contracts. Other configured providers show an explicit unsupported or authentication status instead of invented metrics. DeepSeek Account sign-in and the OpenAI Responses “Sign in with ChatGPT” flow are not substitutes for these API credentials.
 
+Kimi may report the same five-hour Session in both `usages.limit_5h` and an unscoped 300-minute `limits` entry. The structured window takes precedence; the legacy entry remains a fallback for missing/invalid structured metrics and can fill a missing reset timestamp. Monthly, explicitly scoped and unknown windows are not deduplicated by their labels or values.
+
 ## Privacy and safety
 
 - Providers come from the configurable Models directory and their corresponding settings profiles.
@@ -70,10 +72,10 @@ See [provider adapters](src/providers.js) for the implemented contracts. Other c
 
 ## Install from GitHub
 
-Install `github:pnpwin/dsh-quota#v1.0.0` through Plugins or ask the DSH agent to run:
+Install `github:pnpwin/dsh-quota#v1.0.1` through Plugins or ask the DSH agent to run:
 
 ```json
-{"action":"install_bundle","target":"github:pnpwin/dsh-quota#v1.0.0"}
+{"action":"install_bundle","target":"github:pnpwin/dsh-quota#v1.0.1"}
 ```
 
 Use a full commit SHA instead of the tag for immutable pinning. Do not activate the local and GitHub bundles simultaneously: they provide the same slots and tool.
@@ -94,7 +96,7 @@ Tests use `node:test` with synthetic fixtures and mocked network / credential se
 
 No context-saving or token-reduction benchmark is claimed. Byte sizes, synthetic counters and heuristic estimates are not actual provider-reported token measurements. Provider quota data in the running plugin comes from provider endpoints, not from these example images or a session-token estimate.
 
-The current suite has 47 tests. The immutable v1.0.0 runtime release originally shipped 43; subsequent documentation checks are on the main branch. Changing display settings remounts the Host plugin, so an already-running agent turn may need a fresh turn to regain its newly registered tool definition.
+The current suite has 53 tests. Version 1.0.1 adds Kimi mixed-schema regressions covering duplicate Session windows, invalid-data fallback, reset metadata, boundary values and independent scopes. Changing display settings remounts the Host plugin, so an already-running agent turn may need a fresh turn to regain its newly registered tool definition.
 
 ## References
 

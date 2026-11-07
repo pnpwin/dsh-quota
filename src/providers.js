@@ -112,13 +112,26 @@ export function parseKimi(body) {
     const used = ratio === undefined ? undefined : percent(ratio * 100);
     if (used !== undefined) windows.push(window(key, label, 100 - used, iso(raw.reset_time)));
   }
+  const canonicalSession = windows.find(item => item.id === 'limit_5h');
   if (Array.isArray(body?.limits)) for (const [index, raw] of body.limits.slice(0, 20).entries()) {
     const detail = raw?.detail ?? {};
     const limit = numeric(raw?.limit ?? detail.limit);
     const remaining = numeric(raw?.remaining ?? detail.remaining);
     const used = numeric(raw?.used ?? detail.used);
     const p = limit > 0 ? percent(remaining !== undefined ? remaining / limit * 100 : used !== undefined ? (1 - used / limit) * 100 : undefined) : undefined;
-    if (p !== undefined) windows.push(window(`limit-${index}`, raw?.window?.duration === 300 && raw?.window?.timeUnit === 'TIME_UNIT_MINUTE' ? '5 hours' : 'Usage limit', p, iso(raw?.resetTime ?? detail.resetTime)));
+    if (p === undefined) continue;
+    const session = raw?.window?.duration === 300 && raw?.window?.timeUnit === 'TIME_UNIT_MINUTE';
+    const scope = raw?.scope;
+    const scoped = scope != null && (typeof scope !== 'string' || scope.trim() !== '');
+    const resetsAt = iso(raw?.resetTime ?? detail.resetTime);
+    // The unscoped 300-minute limit mirrors usages.limit_5h. Prefer the
+    // structured ratio, not label/value equality: rounding and reset precision vary.
+    // Explicit scopes, monthly limits and unknown windows remain independent.
+    if (canonicalSession && session && !scoped) {
+      if (!canonicalSession.resetsAt && resetsAt) canonicalSession.resetsAt = resetsAt;
+      continue;
+    }
+    windows.push(window(`limit-${index}`, session ? '5 hours' : 'Usage limit', p, resetsAt));
   }
   return metrics(windows);
 }

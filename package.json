@@ -1,6 +1,6 @@
 {
   "name": "@pnpwin/dsh-quota",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Provider balances and subscription quota windows using only Models settings credentials",
   "author": "pnpwin",
   "repository": { "type": "git", "url": "git+https://github.com/pnpwin/dsh-quota.git" },

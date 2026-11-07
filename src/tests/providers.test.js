@@ -43,11 +43,79 @@ test('Moonshot uses available balance without summing debt and vouchers', () => 
 });
 
 test('Kimi windows handle ratios, remaining preference and null metrics safely', () => {
-  const value = parseKimi({ usages: { limit_5h: { used_ratio: 0.25, reset_time: '2026-11-08T00:00:00Z' } }, limits: [{ window: { duration: 300, timeUnit: 'TIME_UNIT_MINUTE' }, detail: { limit: '100', used: '99', remaining: '40' } }] });
+  const value = parseKimi({ usages: { limit_5h: { used_ratio: 0.25, reset_time: '2026-11-08T00:00:00Z' } } });
+  const legacy = parseKimi({ limits: [{ window: { duration: 300, timeUnit: 'TIME_UNIT_MINUTE' }, detail: { limit: '100', used: '99', remaining: '40' } }] });
   assert.equal(value.windows[0].remainingPercent, 75);
-  assert.equal(value.windows[1].remainingPercent, 40);
+  assert.equal(legacy.windows[0].remainingPercent, 40);
   assert.equal(value.windows[0].resetsAt, '2026-11-08T00:00:00.000Z');
   for (const used_ratio of [null, undefined, -1, 1.1, true]) assert.throws(() => parseKimi({ usages: { limit_5h: { used_ratio } } }), /no-metrics/);
+});
+
+// Fixed synthetic responses: no captured account data or credentials.
+const kimiReset = '2027-01-01T06:00:00.000Z';
+const kimiLegacySession = overrides => ({
+  window: { duration: 300, timeUnit: 'TIME_UNIT_MINUTE' },
+  detail: { limit: 100, remaining: 82 },
+  resetTime: '2027-01-01T06:00:01.869Z',
+  ...overrides,
+});
+
+test('Kimi mixed schemas emit one Session while preserving both independent monthly limits', () => {
+  const value=parseKimi({
+    usages:{
+      limit_5h:{used_ratio:0.1784,reset_time:kimiReset},
+      limit_month_total:{used_ratio:0.36,reset_time:'2027-02-01T00:00:00Z'},
+      limit_month_code:{used_ratio:0.36,reset_time:'2027-02-01T00:00:00Z'},
+    },
+    limits:[kimiLegacySession()],
+  });
+  assert.deepEqual(value.windows.map(w=>w.id),['limit_5h','limit_month_total','limit_month_code']);
+  assert.equal(value.windows.filter(w=>w.label==='5 hours').length,1);
+  assert.equal(value.windows[0].remainingPercent,82.16);
+  assert.equal(value.windows[0].resetsAt,kimiReset);
+});
+
+test('Kimi canonical Session at zero or full remaining still suppresses its legacy mirror', () => {
+  for(const used_ratio of [0,1]) {
+    const value=parseKimi({usages:{limit_5h:{used_ratio}},limits:[kimiLegacySession()]});
+    assert.equal(value.windows.length,1);
+    assert.equal(value.windows[0].id,'limit_5h');
+    assert.equal(value.windows[0].remainingPercent,100-used_ratio*100);
+  }
+});
+
+test('Kimi missing or invalid canonical Session falls back to usable legacy metrics', () => {
+  for(const used_ratio of [undefined,null,-1,1.1,true,'invalid']) {
+    const value=parseKimi({usages:{limit_5h:{used_ratio}},limits:[kimiLegacySession()]});
+    assert.equal(value.windows.length,1);
+    assert.equal(value.windows[0].label,'5 hours');
+    assert.equal(value.windows[0].remainingPercent,82);
+  }
+});
+
+test('Kimi canonical monthly metrics do not suppress a legacy-only Session', () => {
+  const value=parseKimi({usages:{limit_month_total:{used_ratio:0.36}},limits:[kimiLegacySession()]});
+  assert.deepEqual(value.windows.map(w=>w.label),['Monthly total','5 hours']);
+});
+
+test('Kimi deduplication retains explicitly scoped and unknown independent limits', () => {
+  for(const scope of ['MODEL_GROUP_ALPHA','  MODEL_GROUP_ALPHA  ',{},0]) {
+    const value=parseKimi({usages:{limit_5h:{used_ratio:0.18}},limits:[kimiLegacySession({scope})]});
+    assert.equal(value.windows.length,2,'Explicit scope must not be inferred as a duplicate');
+  }
+  for(const window of [{duration:60,timeUnit:'TIME_UNIT_MINUTE'},{duration:5,timeUnit:'TIME_UNIT_HOUR'},{duration:300,timeUnit:'UNKNOWN_UNIT'}]) {
+    const value=parseKimi({usages:{limit_5h:{used_ratio:0.18}},limits:[kimiLegacySession({window})]});
+    assert.equal(value.windows.length,2,'Unknown window identity must be preserved even with equal values');
+  }
+});
+
+test('Kimi duplicate Session can fill a missing reset without replacing its canonical percentage', () => {
+  for(const scope of [undefined,null,'','  ']) {
+    const value=parseKimi({usages:{limit_5h:{used_ratio:0.1784}},limits:[kimiLegacySession({scope})]});
+    assert.equal(value.windows.length,1);
+    assert.equal(value.windows[0].remainingPercent,82.16);
+    assert.equal(value.windows[0].resetsAt,'2027-01-01T06:00:01.869Z');
+  }
 });
 
 test('Codex parses reset epochs and excludes arbitrary plan text and raw labels', () => {
