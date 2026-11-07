@@ -228,7 +228,7 @@ test('plugin registers exact auth-gated HTTP routes and a structured shared-oper
   f.ctx.tools = { register: definition => { tool = definition; return () => {}; } };
   apply(f.ctx, { disabledProviders: ['deepseek'] });
   assert.deepEqual(inject, ['connection', 'llm', 'settings', 'credentials', 'tools']);
-  assert.deepEqual([...routes.keys()], ['/api/llm-quota/snapshot', '/api/llm-quota/refresh', '/api/llm-quota/settings']);
+  assert.deepEqual([...routes.keys()], ['/api/llm-quota/snapshot', '/api/llm-quota/refresh', '/api/llm-quota/settings', '/api/llm-quota/layout']);
   assert.ok(tool.output.schema);
   assert.equal(SNAPSHOT_SCHEMA.properties.providers.items.properties.reasonCode.type, 'string');
   const snapshot = await routes.get('/api/llm-quota/snapshot').fetch(new Request('http://localhost/api/llm-quota/snapshot'));

@@ -5,9 +5,34 @@ window.__ModuleLoader__.load({
     const h = React.createElement;
     const {useState,useEffect,useLayoutEffect,useRef,useSyncExternalStore} = React;
     const dictionaries = {
-      en: {title:'LLM quotas',subtitle:'Balances and subscription windows',source:'Providers and credentials: Settings → Models only. Secrets never reach the browser.',refresh:'Refresh',refreshing:'Checking…',settings:'Settings',back:'Back',open:'Open quotas',close:'Close',empty:'No configured providers. Add a provider in Settings → Models.',loading:'Loading quotas…',retry:'Retry',checked:'Checked',left:'left',reset:'Resets',unknown:'Not reported',balance:'Account balance',keyBudget:'Key budget',plan:'Plan',stale:'Stale data',unsupported:'Not supported',missing:'Sign-in required',error:'Could not check',disabled:'Disabled',ok:'Current',view:'View',showBar:'Show quotas below the session composer',mode:'Status bar mode',all:'All providers',worst:'Lowest quota only',showReset:'Show reset countdown in the status bar',resetFormat:'Reset time format',relative:'Relative',absolute:'Absolute',interval:'Refresh interval',seconds:'seconds',enabled:'Enabled providers',save:'Save',saved:'Saved',preferences:'Display preferences',security:'Authentication',securityNote:'Only credentials stored for configured Models providers are used. Environment variables, CLI files, browser sessions and OS credential stores are not searched. Subscription APIs are not available for every provider; unknown is never displayed as 0%.',none:'No quota metrics returned',windows:'Quota windows',total:'Total',used:'Used',remaining:'Remaining',available:'Available',details:'Details',hide:'Hide',session:'Session',weekly:'Weekly',monthly:'Monthly',tools:'Web tools',monthTotal:'Monthly total',monthCode:'Monthly code',rate:'Rate',warning:'Low quota',noWindow:'Balance / status',unlimited:'No fixed limit',failed:'Request failed. Try again.',configure:'Provider switches do not change Models settings.',currencyNote:'Currencies and independent accounts are not combined.',refreshNote:'Provider queries are cached and refreshes are rate-limited.',transport:'Cannot reach quota backend. Reload the page or check plugin activation.'},
-      ru: {title:'Квоты LLM',subtitle:'Балансы и лимиты подписок',source:'Провайдеры и авторизация — только из Settings → Models. Секреты не передаются в браузер.',refresh:'Обновить',refreshing:'Проверяем…',settings:'Настройки',back:'Назад',open:'Открыть квоты',close:'Закрыть',empty:'Нет настроенных провайдеров. Добавьте провайдера в Settings → Models.',loading:'Загрузка квот…',retry:'Повторить',checked:'Проверено',left:'осталось',reset:'Сброс',unknown:'Не сообщается',balance:'Баланс аккаунта',keyBudget:'Бюджет ключа',plan:'Тариф',stale:'Устаревшие данные',unsupported:'Не поддерживается',missing:'Нужна авторизация',error:'Ошибка проверки',disabled:'Отключён',ok:'Актуально',view:'Вид',showBar:'Показывать квоты под полем ввода сессии',mode:'Режим строки квот',all:'Все провайдеры',worst:'Только минимальная квота',showReset:'Показывать время до сброса в строке квот',resetFormat:'Формат времени сброса',relative:'Относительный',absolute:'Точная дата',interval:'Интервал обновления',seconds:'секунд',enabled:'Включённые провайдеры',save:'Сохранить',saved:'Сохранено',preferences:'Отображение',security:'Авторизация',securityNote:'Используются только сохранённые ключи и авторизации настроенных провайдеров Models. Переменные окружения, файлы CLI, браузерные сессии и хранилища ОС не просматриваются. Не каждый провайдер отдаёт квоту подписки; неизвестное значение никогда не отображается как 0%.',none:'Провайдер не вернул показатели квоты',windows:'Окна квоты',total:'Всего',used:'Использовано',remaining:'Осталось',available:'Доступно',details:'Подробности',hide:'Скрыть',session:'Сессия',weekly:'Неделя',monthly:'Месяц',tools:'Веб-инструменты',monthTotal:'Всего за месяц',monthCode:'Код за месяц',rate:'Скорость',warning:'Мало квоты',noWindow:'Баланс / статус',unlimited:'Без фиксированного лимита',failed:'Не удалось выполнить запрос. Попробуйте ещё раз.',configure:'Переключатели не изменяют настройки Models.',currencyNote:'Валюты и независимые аккаунты не суммируются.',refreshNote:'Результаты кешируются; частота ручных обновлений ограничена.',transport:'Backend квот недоступен. Перезагрузите страницу или проверьте включение плагина.'}
+      en: {title:'LLM quotas',subtitle:'Balances and subscription windows',source:'Providers and credentials: Settings → Models only. Secrets never reach the browser.',refresh:'Refresh',refreshing:'Checking…',settings:'Settings',back:'Back',open:'Open quotas',close:'Close',empty:'No configured providers. Add a provider in Settings → Models.',loading:'Loading quotas…',retry:'Retry',checked:'Checked',left:'left',reset:'Resets',unknown:'Not reported',balance:'Account balance',keyBudget:'Key budget',plan:'Plan',stale:'Stale data',unsupported:'Not supported',missing:'Sign-in required',error:'Could not check',disabled:'Disabled',ok:'Current',view:'View',showBar:'Show quotas below the session composer',mode:'Status bar mode',all:'All providers',worst:'Lowest quota only',showReset:'Show reset countdown in compact details',resetFormat:'Reset time format',relative:'Relative',absolute:'Absolute',interval:'Refresh interval',seconds:'seconds',enabled:'Enabled providers',save:'Save',saved:'Saved',preferences:'Display preferences',security:'Authentication',securityNote:'Only credentials stored for configured Models providers are used. Environment variables, CLI files, browser sessions and OS credential stores are not searched. Subscription APIs are not available for every provider; unknown is never displayed as 0%.',none:'No quota metrics returned',windows:'Quota windows',total:'Total',used:'Used',remaining:'Remaining',available:'Available',details:'Details',hide:'Hide',session:'Session',weekly:'Weekly',monthly:'Monthly',tools:'Web tools',monthTotal:'Monthly total',monthCode:'Monthly code',rate:'Rate',warning:'Low quota',noWindow:'Balance / status',unlimited:'No fixed limit',failed:'Request failed. Try again.',configure:'Provider switches do not change Models settings.',currencyNote:'Currencies and independent accounts are not combined.',refreshNote:'Provider queries are cached and refreshes are rate-limited.',transport:'Cannot reach quota backend. Reload the page or check plugin activation.'},
+      ru: {title:'Квоты LLM',subtitle:'Балансы и лимиты подписок',source:'Провайдеры и авторизация — только из Settings → Models. Секреты не передаются в браузер.',refresh:'Обновить',refreshing:'Проверяем…',settings:'Настройки',back:'Назад',open:'Открыть квоты',close:'Закрыть',empty:'Нет настроенных провайдеров. Добавьте провайдера в Settings → Models.',loading:'Загрузка квот…',retry:'Повторить',checked:'Проверено',left:'осталось',reset:'Сброс',unknown:'Не сообщается',balance:'Баланс аккаунта',keyBudget:'Бюджет ключа',plan:'Тариф',stale:'Устаревшие данные',unsupported:'Не поддерживается',missing:'Нужна авторизация',error:'Ошибка проверки',disabled:'Отключён',ok:'Актуально',view:'Вид',showBar:'Показывать квоты под полем ввода сессии',mode:'Режим строки квот',all:'Все провайдеры',worst:'Только минимальная квота',showReset:'Показывать время до сброса в компактных подробностях',resetFormat:'Формат времени сброса',relative:'Относительный',absolute:'Точная дата',interval:'Интервал обновления',seconds:'секунд',enabled:'Включённые провайдеры',save:'Сохранить',saved:'Сохранено',preferences:'Отображение',security:'Авторизация',securityNote:'Используются только сохранённые ключи и авторизации настроенных провайдеров Models. Переменные окружения, файлы CLI, браузерные сессии и хранилища ОС не просматриваются. Не каждый провайдер отдаёт квоту подписки; неизвестное значение никогда не отображается как 0%.',none:'Провайдер не вернул показатели квоты',windows:'Окна квоты',total:'Всего',used:'Использовано',remaining:'Осталось',available:'Доступно',details:'Подробности',hide:'Скрыть',session:'Сессия',weekly:'Неделя',monthly:'Месяц',tools:'Веб-инструменты',monthTotal:'Всего за месяц',monthCode:'Код за месяц',rate:'Скорость',warning:'Мало квоты',noWindow:'Баланс / статус',unlimited:'Без фиксированного лимита',failed:'Не удалось выполнить запрос. Попробуйте ещё раз.',configure:'Переключатели не изменяют настройки Models.',currencyNote:'Валюты и независимые аккаунты не суммируются.',refreshNote:'Результаты кешируются; частота ручных обновлений ограничена.',transport:'Backend квот недоступен. Перезагрузите страницу или проверьте включение плагина.'}
     };
+    Object.assign(dictionaries.en, {moreProviders:'Hidden providers',overflowHint:'Providers with zero quota or low balances are hidden first when space is limited.',balanceThresholds:'Low-balance thresholds',thresholdHelp:'Hide these providers first only when space is limited. All reported balances must be below their currency thresholds. USD 1 and CNY 7 are manual defaults, not live exchange rates. Empty disables a currency; values are not summed.',threshold:'Threshold',notSet:'Not set',quotaShort:'Quotas'});
+    Object.assign(dictionaries.ru, {moreProviders:'Скрытые провайдеры',overflowHint:'При нехватке места первыми скрываются провайдеры с нулевой квотой или низким балансом.',balanceThresholds:'Пороги низкого баланса',thresholdHelp:'Влияют только на порядок скрытия при нехватке места. Все балансы провайдера должны быть ниже порогов своих валют. 1 USD и 7 CNY — ручные значения, не текущий курс. Пустое поле отключает валюту; суммы не складываются.',threshold:'Порог',notSet:'Не задан',quotaShort:'Квоты'});
+    // Pure overflow policy. Unknown, failed and stale data must not masquerade as exhausted accounts.
+    function deprioritizeProvider(provider, thresholds = {USD:1,CNY:7}) {
+      if(provider.status !== 'ok')return false;
+      if((provider.windows??[]).some(w=>typeof w.remainingPercent==='number'&&Number.isFinite(w.remainingPercent)&&w.remainingPercent<=0))return true;
+      const balances=provider.balances??[];
+      return balances.length>0&&balances.every(b=>typeof b.remaining==='number'&&Number.isFinite(b.remaining)&&Object.hasOwn(thresholds,b.currency)&&b.remaining<thresholds[b.currency]);
+    }
+    // Remove low-priority accounts first, from the end within each tier; never reorder visible accounts.
+    function fitProviders(widths, priorities, available, moreWidth, gap = 8) {
+      const shown=widths.map((_,i)=>i);
+      const total=()=>shown.reduce((sum,i)=>sum+widths[i],0)+Math.max(0,shown.length-1)*gap;
+      if(total()<=available)return {visible:shown,hidden:[]};
+      const removal=[...shown.filter(i=>priorities[i]).reverse(),...shown.filter(i=>!priorities[i]).reverse()];
+      for(const index of removal){
+        shown.splice(shown.indexOf(index),1);
+        if(total()+(shown.length?gap:0)+moreWidth<=available)break;
+      }
+      return {visible:shown,hidden:widths.map((_,i)=>i).filter(i=>!shown.includes(i))};
+    }
+    function shortProviderName(name) {
+      if(/^kimi-coding$/i.test(name))return 'Kimi';
+      return name.replace(/\s*\(ChatGPT Pro\)$/i,'');
+    }
     // Pure geometry; surfaces are measured only inside their own React subtree.
     function floatingPosition(anchor, naturalHeight, viewportWidth, viewportHeight, preferredWidth) {
       const margin = 12, gap = 8;
@@ -48,9 +73,14 @@ window.__ModuleLoader__.load({
     .dq-switch{border:0;border-radius:14px;min-width:36px;height:21px;padding:3px;background:var(--dsw-alias-bg-layer-2);box-shadow:inset 0 0 0 1px var(--dsw-alias-border-l2);display:flex;align-items:center}
     .dq-switch[aria-checked=true]{background:var(--dsw-alias-brand-primary);justify-content:flex-end}.dq-switch span{display:block;width:15px;height:15px;border-radius:50%;background:var(--dsw-alias-bg-base)}
     .dq-select{border:1px solid var(--dsw-alias-border-l1);border-radius:7px;background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary);padding:5px 7px;max-width:100%}
-    .dq-bar{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:3px 9px;max-width:100%;min-width:0;font-size:12px;line-height:1.3}
-    .dq-chip{border:0;background:none;color:var(--dsw-alias-label-secondary);padding:4px 3px;display:inline-flex;align-items:center;gap:5px;border-radius:5px;max-width:100%;white-space:nowrap}
-    .dq-chip:hover,.dq-chip:focus-visible,.dq-chip[aria-expanded=true]{background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary)}.dq-chip-label{overflow:hidden;text-overflow:ellipsis;max-width:240px}
+    /* Slot outlets add a display:contents DOM anchor: match the documented slot descendant, not a direct child. */
+    [data-composer-dock]:has([data-slot="conversation.composer.dock"] .dq-bar){align-self:stretch;width:100%;max-width:100%;box-sizing:border-box;justify-content:flex-start}
+    /* Keep a nonzero measured basis while using the owner's newly available space. */
+    .dq-bar{position:relative;display:flex;align-items:center;justify-content:flex-end;flex:1 .5 var(--dq-natural-width,max-content);flex-wrap:nowrap;gap:8px;max-width:100%;min-width:28px;height:24px;overflow:hidden;font-size:12px;line-height:20px;border:0;background:none}
+    .dq-chip{border:0;background:none;color:var(--dsw-alias-label-secondary);padding:2px 0;display:inline-flex;align-items:center;gap:5px;border-radius:0;flex:none;max-width:100%;white-space:nowrap;font-variant-numeric:tabular-nums}
+    .dq-chip:hover,.dq-chip:focus-visible,.dq-chip[aria-expanded=true]{background:none;color:var(--dsw-alias-label-primary)}.dq-chip-label{overflow:hidden;text-overflow:ellipsis;max-width:156px}
+    .dq-bar .dq-chip:focus-visible{outline-offset:-2px}.dq-more{overflow:hidden;min-width:0}.dq-measure{position:absolute;inset:0 auto auto 0;display:flex;gap:8px;width:max-content;visibility:hidden;pointer-events:none;height:0;overflow:hidden}.dq-measure .dq-chip{max-width:none}.dq-measure .dq-chip-label{max-width:156px}
+    .dq-overflow-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0}.dq-overflow-row+.dq-overflow-row{border-top:1px solid var(--dsw-alias-border-l1)}.dq-overflow-name{min-width:0;overflow-wrap:anywhere}.dq-overflow-value{text-align:right;flex:none;color:var(--dsw-alias-label-secondary)}.dq-threshold-input{width:112px}
     .dq-ring{position:relative;flex:none;width:15px;height:15px;display:inline-block}.dq-ring svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
     .dq-surface{--dq-surface-padding:16px;font-size:12px;position:fixed;display:flex;flex-direction:column;min-height:0;background:var(--dsw-specific-menu,var(--dsw-alias-bg-base));backdrop-filter:var(--dsw-menu-backdrop-filter,none);--dsw-elevation-stroke-color:var(--dsw-alias-border-l1);border:0;border-radius:var(--dsw-radius-lg,16px);padding:var(--dq-surface-padding);box-shadow:var(--dsw-elevation-prominent,0 1px 8px color-mix(in srgb,var(--dsw-alias-label-primary) 7%,transparent));--dsh-scrollbar-thumb:var(--dsw-alias-scrollbar-bg-l2,var(--dsw-alias-border-l2));--dsh-scrollbar-thumb-hover:var(--dsw-alias-scrollbar-hover-l2,var(--dsw-alias-border-l2));overflow:hidden}
     .dq-pop{pointer-events:auto}.dq-tooltip{pointer-events:none}.dq-surface-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none;padding-bottom:12px;border-bottom:1px solid var(--dsw-alias-border-l1)}
@@ -62,7 +92,7 @@ window.__ModuleLoader__.load({
     .dq-tooltip .dq-provider{padding:0}.dq-tooltip .dq-provider-head{padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--dsw-alias-border-l1)}
     .dq-tooltip .dq-provider-checked{padding-top:10px;margin-top:12px;border-top:1px solid var(--dsw-alias-border-l1)}.dq-surface-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:10px;border-top:1px solid var(--dsw-alias-border-l1);flex:none}
     .dq-error{color:var(--dsw-alias-state-error-primary);font-size:12px;line-height:18px;margin:10px 0}.dq-footer{border-top:1px solid var(--dsw-alias-border-l1);padding-top:12px;margin-top:16px}.dq-head-note{margin:8px 0 20px;font-size:12px;line-height:18px}.dq-settings{width:100%}
-    @media(max-width:500px){.dq-page{padding:16px}.dq-card{padding:14px}.dq-card.dq-providers{padding:0 14px}.dq-row{gap:12px}.dq-row>span:first-child{max-width:62%}.dq-chip-label{max-width:160px}.dq-metric{column-gap:12px}.dq-surface{--dq-surface-padding:14px}}
+    @media(max-width:500px){.dq-page{padding:16px}.dq-card{padding:14px}.dq-card.dq-providers{padding:0 14px}.dq-row{gap:12px}.dq-row>span:first-child{max-width:62%}.dq-metric{column-gap:12px}.dq-surface{--dq-surface-padding:14px}}
     `;
     return {
       inject:['slots','locale','layout'],
@@ -77,7 +107,7 @@ window.__ModuleLoader__.load({
         }
         const t = ctx.locale.bind('local-llm-quota');
         const listeners = new Set();
-        let alive=true, flight=null, state={data:null,error:null,busy:false,overlay:null,hover:null,now:Date.now()};
+        let alive=true, flight=null, saving=false, state={data:null,error:null,busy:false,overlay:null,hover:null,now:Date.now()};
         const publish = patch => {if(alive){state={...state,...patch};for(const fn of listeners)fn();}};
         const subscribe=fn=>{listeners.add(fn);return()=>listeners.delete(fn);};
         const requests=new Set();
@@ -92,23 +122,49 @@ window.__ModuleLoader__.load({
             return result.value??result;
           } finally {clearTimeout(timeout);requests.delete(controller);}
         }
+        // Anonymous, bounded diagnostic reports: only this entry's sizes, no account names or host DOM.
+        let layoutTimer, layoutFlight=false, pendingLayout=null, lastLayoutSent='';
+        function sendLayout(){
+          layoutTimer=undefined;
+          if(!alive||layoutFlight||!pendingLayout)return;
+          const sample=pendingLayout;pendingLayout=null;
+          const signature=JSON.stringify(sample);
+          if(signature===lastLayoutSent)return;
+          layoutFlight=true;
+          request('layout',sample).then(()=>{lastLayoutSent=signature;}).catch(()=>{}).finally(()=>{
+            layoutFlight=false;
+            if(alive&&pendingLayout)layoutTimer=setTimeout(sendLayout,120);
+          });
+        }
+        function reportLayout(sample){
+          if(!alive||(JSON.stringify(sample)===lastLayoutSent&&!pendingLayout))return;
+          pendingLayout=sample;clearTimeout(layoutTimer);layoutTimer=setTimeout(sendLayout,120);
+        }
         function load(force=false) {
           if(flight)return flight;
+          if(saving)return Promise.resolve();
           publish({busy:true});
-          flight=request(force?'refresh':'snapshot',force?{}:undefined).then(data=>publish({data,error:null})).catch(()=>publish({error:'transport'})).finally(()=>{flight=null;publish({busy:false});});
+          flight=request(force?'refresh':'snapshot',force?{}:undefined).then(data=>publish({data,error:null})).catch(()=>publish({error:'transport'})).finally(()=>{flight=null;if(!saving)publish({busy:false});});
           return flight;
         }
         async function save(patch) {
-          publish({busy:true,error:null});
-          try {const data=await request('settings',patch);if(data.providers)publish({data});else await load();return true;}
+          if(saving)return false;
+          saving=true;publish({busy:true,error:null});
+          try {
+            // Settle pre-save snapshots first; polling cannot overwrite a newer saved configuration.
+            if(flight)await flight;
+            const result=await request('settings',patch);
+            const data=result.providers?result:await request('snapshot');
+            publish({data,error:null});return true;
+          }
           catch {publish({error:'failed'});return false;}
-          finally {publish({busy:false});}
+          finally {saving=false;publish({busy:false});}
         }
         ctx.effect(()=>{
           load();
           const timer=setInterval(()=>{publish({now:Date.now()});if(!document.hidden)load();},30000);
           const visible=()=>{if(!document.hidden)load();};document.addEventListener('visibilitychange',visible);
-          return()=>{alive=false;clearInterval(timer);document.removeEventListener('visibilitychange',visible);for(const c of requests)c.abort();listeners.clear();};
+          return()=>{alive=false;clearInterval(timer);clearTimeout(layoutTimer);pendingLayout=null;document.removeEventListener('visibilitychange',visible);for(const c of requests)c.abort();listeners.clear();};
         });
         function useQuota(){useSyncExternalStore(fn=>ctx.locale.subscribe(fn),()=>ctx.locale.getSnapshot());return useSyncExternalStore(subscribe,()=>state);}
         const pct=w=>typeof w.remainingPercent==='number'&&Number.isFinite(w.remainingPercent)?Math.max(0,Math.min(100,w.remainingPercent)):null;
@@ -152,7 +208,7 @@ window.__ModuleLoader__.load({
                 return h('div',{className:'dq-metric',key:w.id??i},
                   h('dt',null,label(w)),
                   h('dd',null,h('span',{className:'dq-metric-value'},value===null?'—':`${Math.round(value)}% ${t('left')}`),
-                    resetAt&&h('time',{className:'dq-reset',dateTime:resetAt.toISOString(),title:resetAt.toLocaleString()},`${t('reset')} ${reset(w.resetsAt,settings.resetFormat,s.now)}`)),
+                    resetAt&&(!compact||settings.showReset)&&h('time',{className:'dq-reset',dateTime:resetAt.toISOString(),title:resetAt.toLocaleString()},`${t('reset')} ${reset(w.resetsAt,settings.resetFormat,s.now)}`)),
                   !compact&&value!==null&&h('span',{className:'dq-meter','aria-hidden':true},h('span',{style:{width:`${value}%`,background:color(value<=5?'error':value<=25?'warn':'success')}})));
               })),
             !compact&&(p.notes??[]).map((note,i)=>h('p',{className:'dq-provider-note',key:i},note)),
@@ -166,6 +222,17 @@ window.__ModuleLoader__.load({
           const shown=compact?ps.filter(p=>!(s.data.settings?.disabledProviders??[]).includes(p.id)):ps;
           return shown.length?h('div',{className:compact?'dq-providers':'dq-card dq-providers'},shown.map(p=>h(ProviderCard,{key:p.id,p,compact}))):h('p',{className:'dq-muted'},t('empty'));
         }
+        function OverflowProviders({ids}){
+          const s=useQuota();
+          const shown=(s.data?.providers??[]).filter(p=>ids.includes(p.id)&&!(s.data?.settings?.disabledProviders??[]).includes(p.id));
+          return h('div',null,shown.map(p=>{const w=minWindow(p);return h('div',{className:'dq-overflow-row',key:p.id},h('span',{className:'dq-overflow-name'},p.name,p.status!=='ok'&&h('span',{className:'dq-reset'},stat(p))),h('span',{className:'dq-overflow-value'},summary(p),s.data?.settings?.showReset&&w?.resetsAt&&h('span',{className:'dq-reset'},`${t('reset')} ${reset(w.resetsAt,s.data.settings.resetFormat,s.now)}`)));}));
+        }
+        function BalanceThresholds({draft,change}){
+          const s=useQuota();
+          const values=draft.lowBalanceThresholds??{USD:1,CNY:7};
+          const currencies=[...new Set(['USD','CNY',...Object.keys(values),...(s.data?.providers??[]).flatMap(p=>(p.balances??[]).map(b=>b.currency))])].filter(c=>/^[A-Z]{3}$/.test(c)).sort();
+          return h('section',{className:'dq-card'},h('h3',null,t('balanceThresholds')),h('p',{className:'dq-caption'},t('thresholdHelp')),currencies.map(currency=>h('label',{className:'dq-row',key:currency},h('span',null,`${t('threshold')} · ${currency}`),h('input',{type:'number',className:'dq-select dq-threshold-input',min:0,max:1e12,step:'any',placeholder:t('notSet'),value:values[currency]??'',onChange:e=>{const next={...values};if(e.target.value==='')delete next[currency];else next[currency]=e.target.value;change('lowBalanceThresholds',next);}}))));
+        }
         function SettingsView(){const s=useQuota();const settings=s.data?.settings;const [draft,setDraft]=useState(null);const [saved,setSaved]=useState(false);
           const settingsSignature=JSON.stringify(settings);
           useEffect(()=>{if(settings)setDraft({...settings});},[settingsSignature]);
@@ -173,14 +240,68 @@ window.__ModuleLoader__.load({
           const change=(key,value)=>{setDraft(d=>({...d,[key]:value}));setSaved(false);};
           const toggle=(key,text)=>h('div',{className:'dq-row',key},h('span',null,text),h('button',{type:'button',className:'dq-switch',role:'switch','aria-checked':!!draft[key],'aria-label':text,onClick:()=>change(key,!draft[key])},h('span')));
           const select=(key,text,options)=>h('label',{className:'dq-row',key},h('span',null,text),h('select',{className:'dq-select',value:draft[key],onChange:e=>change(key,e.target.value)},options.map(([value,key])=>h('option',{key:value,value},t(key)))));
-          return h('div',{className:'dq dq-settings'},h('section',{className:'dq-card'},h('h3',null,t('preferences')),toggle('showBar',t('showBar')),select('mode',t('mode'),[['all','all'],['worst','worst']]),toggle('showReset',t('showReset')),select('resetFormat',t('resetFormat'),[['relative','relative'],['absolute','absolute']]),h('label',{className:'dq-row'},h('span',null,`${t('interval')} (${t('seconds')})`),h('input',{className:'dq-select',type:'number',min:60,max:3600,step:30,value:draft.refreshSeconds,style:{width:100},onChange:e=>change('refreshSeconds',e.target.value)}))),h('section',{className:'dq-card'},h('h3',null,t('enabled')),h('p',{className:'dq-muted'},t('configure')),(s.data?.providers??[]).map(p=>h('label',{className:'dq-row',key:p.id},h('span',null,p.name),h('input',{type:'checkbox',checked:!draft.disabledProviders.includes(p.id),onChange:e=>change('disabledProviders',e.target.checked?draft.disabledProviders.filter(x=>x!==p.id):[...draft.disabledProviders,p.id])})))),h('div',{className:'dq-toolbar',style:{marginTop:16}},h(Button,{disabled:s.busy||!Number.isFinite(Number(draft.refreshSeconds))||Number(draft.refreshSeconds)<60||Number(draft.refreshSeconds)>3600,onClick:async()=>{setSaved(false);if(await save({...draft,refreshSeconds:Number(draft.refreshSeconds)}))setSaved(true);}},t('save')),saved&&h('span',{className:'dq-muted',role:'status'},t('saved'))),h(ErrorNotice),h('section',{className:'dq-card'},h('h3',null,t('security')),h('p',{className:'dq-muted'},t('securityNote'))));
+          const thresholds=draft.lowBalanceThresholds??{USD:1,CNY:7};
+          const invalidThresholds=Object.keys(thresholds).length>32||Object.values(thresholds).some(v=>!Number.isFinite(Number(v))||Number(v)<0||Number(v)>1e12);
+          return h('div',{className:'dq dq-settings'},h('section',{className:'dq-card'},h('h3',null,t('preferences')),toggle('showBar',t('showBar')),select('mode',t('mode'),[['all','all'],['worst','worst']]),toggle('showReset',t('showReset')),select('resetFormat',t('resetFormat'),[['relative','relative'],['absolute','absolute']]),h('label',{className:'dq-row'},h('span',null,`${t('interval')} (${t('seconds')})`),h('input',{className:'dq-select',type:'number',min:60,max:3600,step:30,value:draft.refreshSeconds,style:{width:100},onChange:e=>change('refreshSeconds',e.target.value)}))),h(BalanceThresholds,{draft,change}),h('section',{className:'dq-card'},h('h3',null,t('enabled')),h('p',{className:'dq-muted'},t('configure')),(s.data?.providers??[]).map(p=>h('label',{className:'dq-row',key:p.id},h('span',null,p.name),h('input',{type:'checkbox',checked:!draft.disabledProviders.includes(p.id),onChange:e=>change('disabledProviders',e.target.checked?draft.disabledProviders.filter(x=>x!==p.id):[...draft.disabledProviders,p.id])})))),h('div',{className:'dq-toolbar',style:{marginTop:16}},h(Button,{disabled:s.busy||invalidThresholds||!Number.isFinite(Number(draft.refreshSeconds))||Number(draft.refreshSeconds)<60||Number(draft.refreshSeconds)>3600,onClick:async()=>{setSaved(false);if(await save({...draft,refreshSeconds:Number(draft.refreshSeconds),lowBalanceThresholds:Object.fromEntries(Object.entries(thresholds).map(([currency,value])=>[currency,Number(value)]))}))setSaved(true);}},t('save')),saved&&h('span',{className:'dq-muted',role:'status'},t('saved'))),h(ErrorNotice),h('section',{className:'dq-card'},h('h3',null,t('security')),h('p',{className:'dq-muted'},t('securityNote'))));
         }
         function Page(){const s=useQuota();const [settings,setSettings]=useState(false);return h('div',{className:'dq dq-page'},h('div',{className:'dq-content'},h('header',{className:'dq-toolbar'},h('h2',null,h(Icon,{size:22}),' ',t('title'),settings?` · ${t('settings')}`:''),h('div',{className:'dq-actions'},h(Button,{onClick:()=>setSettings(!settings)},t(settings?'back':'settings')),h(Button,{onClick:()=>load(true),disabled:s.busy},t(s.busy?'refreshing':'refresh')))),h('p',{className:'dq-muted dq-head-note'},t('source')),h(ErrorNotice),settings?h(SettingsView):h(React.Fragment,null,h(Providers),h('p',{className:'dq-muted dq-footer'},t('currencyNote'),' ',t('refreshNote')))));}
         const openPage=()=>{publish({overlay:null,hover:null});ctx.layout.selectPanel('local-llm-quota');};
-        function summary(p){const w=minWindow(p);const bs=(p.balances??[]).map(money).join(' · ');return w?`${Math.round(pct(w))}%`:bs||'—';}
-        function Bar(){const s=useQuota();const cfg=s.data?.settings;if(cfg?.showBar===false)return null;let ps=(s.data?.providers??[]).filter(p=>!(cfg?.disabledProviders??[]).includes(p.id));if(cfg?.mode==='worst'){const withWindows=ps.filter(p=>minWindow(p));ps=withWindows.length?[withWindows.sort((a,b)=>pct(minWindow(a))-pct(minWindow(b)))[0]]:ps.slice(0,1);}
-          const click=e=>{const anchor=e.currentTarget.getBoundingClientRect();publish({overlay:{anchor,trigger:e.currentTarget},hover:null});};
-          return h('div',{className:'dq dq-bar','aria-label':t('title')},!ps.length?h('button',{type:'button',className:'dq-chip',onClick:click},h(Icon,{size:14}),t(s.error?'error':s.data?'title':'loading')):ps.map(p=>{const w=minWindow(p);return h('button',{type:'button',className:'dq-chip',key:p.id,onClick:click,'aria-haspopup':'dialog','aria-expanded':!!s.overlay,'aria-controls':s.overlay?'dq-quota-popover':undefined,'aria-label':`${p.name}: ${summary(p)}. ${stat(p)}. ${t('open')}`,'aria-describedby':s.hover?.p.id===p.id?'dq-quota-tooltip':undefined,onMouseEnter:e=>!state.overlay&&publish({hover:{p,anchor:e.currentTarget.getBoundingClientRect()}}),onMouseLeave:()=>publish({hover:null}),onFocus:e=>!state.overlay&&publish({hover:{p,anchor:e.currentTarget.getBoundingClientRect()}}),onBlur:()=>publish({hover:null})},w?h(Ring,{value:pct(w),small:true}):h('i',{className:'dq-dot',style:{color:color(tone(p))}}),h('span',{className:'dq-chip-label'},`${p.name} ${summary(p)}`),p.status==='stale'&&'≈',cfg?.showReset&&w?.resetsAt&&pct(w)<=15&&h('span',null,`↻ ${reset(w.resetsAt,cfg.resetFormat,s.now)}`));}));
+        function summary(p){const w=minWindow(p);const bs=(p.balances??[]).map(money).join(' · ');return w?(pct(w)>0&&pct(w)<1?'<1%':`${Math.round(pct(w))}%`):bs||'—';}
+        function stripSummary(p){
+          if(minWindow(p))return summary(p);
+          return (p.balances??[]).map(b=>{try{return new Intl.NumberFormat(ctx.locale.getLocale().active,{style:'currency',currency:b.currency,currencyDisplay:'narrowSymbol',minimumFractionDigits:2,maximumFractionDigits:2}).format(b.remaining);}catch{return money(b);}}).join(' · ')||'—';
+        }
+        function Bar(){
+          const s=useQuota(), cfg=s.data?.settings;
+          const root=useRef(null), measure=useRef(null), more=useRef(null), lastFit=useRef(null), recoverFocus=useRef(false);
+          const [fit,setFit]=useState({visible:[],hidden:[],naturalWidth:null});
+          let ps=(s.data?.providers??[]).filter(p=>!(cfg?.disabledProviders??[]).includes(p.id));
+          if(cfg?.mode==='worst'){const ws=ps.filter(p=>minWindow(p));ps=ws.length?[ws.sort((a,b)=>pct(minWindow(a))-pct(minWindow(b)))[0]]:ps.slice(0,1);}
+          const signature=JSON.stringify([ps,cfg?.lowBalanceThresholds,ctx.locale.getLocale().active,cfg?.showBar]);
+          useLayoutEffect(()=>{
+            if(!root.current||!measure.current)return;
+            let disposed=false;
+            const update=()=>{
+              if(disposed||!root.current||!measure.current)return;
+              const widths=Array.from(measure.current.children).map(el=>el.getBoundingClientRect().width);
+              const rect=root.current.getBoundingClientRect();
+              const next={...fitProviders(widths,ps.map(p=>deprioritizeProvider(p,cfg?.lowBalanceThresholds)),rect.width,more.current?.getBoundingClientRect().width??28),naturalWidth:widths.reduce((sum,w)=>sum+w,0)+Math.max(0,widths.length-1)*8,available:rect.width,left:rect.left,top:rect.top,signature};
+              const computed=window.getComputedStyle(root.current), basis=parseFloat(computed.flexBasis);
+              reportLayout({version:'1.1.0',viewportWidth:window.innerWidth,barWidth:rect.width,moreWidth:more.current?.getBoundingClientRect().width??28,chipWidths:widths,visibleCount:next.visible.length,hiddenCount:next.hidden.length,flexGrow:Number(computed.flexGrow)||0,flexShrink:Number(computed.flexShrink)||0,flexBasisPx:Number.isFinite(basis)?basis:null,supportsHas:typeof CSS!=='undefined'&&CSS.supports('selector(:has(*))'),directDockChild:root.current.matches('[data-composer-dock] > .dq-bar')});
+              if(JSON.stringify(lastFit.current)===JSON.stringify(next))return;
+              lastFit.current=next;
+              const active=document.activeElement;
+              const hiddenIds=next.hidden.map(i=>ps[i]?.id);
+              if(root.current.contains(active)&&hiddenIds.includes(active?.dataset?.providerId))recoverFocus.current=true;
+              // Container/sidebar resizes need the same safe dismissal as window resizes.
+              if(state.overlay&&root.current.contains(state.overlay.trigger)){recoverFocus.current=true;publish({overlay:null,hover:null});}
+              setFit(next);
+            };
+            update();
+            const observer=typeof ResizeObserver==='function'?new ResizeObserver(update):null;
+            observer?.observe(root.current);observer?.observe(measure.current);
+            window.addEventListener('resize',update);
+            document.fonts?.ready.then(()=>{if(!disposed)update();});
+            return()=>{disposed=true;observer?.disconnect();window.removeEventListener('resize',update);};
+          },[signature]);
+          // Never leave focus or an overlay attached to a provider that became hidden on resize.
+          useLayoutEffect(()=>{
+            // A signature update schedules a new fit in the preceding effect; wait for its DOM commit.
+            if(fit!==lastFit.current)return;
+            const ids=new Set(fit.visible.map(i=>ps[i]?.id));
+            if(state.hover&&!ids.has(state.hover.p.id))publish({hover:null});
+            if(state.overlay?.trigger?.isConnected===false){recoverFocus.current=true;publish({overlay:null,hover:null});}
+            if(recoverFocus.current){recoverFocus.current=false;(root.current?.querySelector('.dq-more')??root.current?.querySelector('button'))?.focus({preventScroll:true});publish({hover:null});}
+          },[signature,JSON.stringify(fit)]);
+          if(cfg?.showBar===false)return null;
+          const click=(e,hiddenIds)=>{const trigger=e.currentTarget;publish({overlay:{anchor:trigger.getBoundingClientRect(),trigger,triggerId:trigger.dataset.quotaTrigger,hiddenIds},hover:null});};
+          const content=p=>{const w=minWindow(p);return [w?h(Ring,{key:'ring',value:pct(w)}):h('i',{key:'dot',className:'dq-dot',style:{color:color(tone(p))},'aria-hidden':true}),h('span',{key:'label',className:'dq-chip-label'},`${shortProviderName(p.name)} ${stripSummary(p)}`),p.status==='stale'?'≈':null];};
+          const dialogProps=id=>({'data-quota-trigger':id,'aria-haspopup':'dialog','aria-expanded':!!s.overlay&&s.overlay.triggerId===id,'aria-controls':s.overlay?.triggerId===id?'dq-quota-popover':undefined});
+          const hidden=fit.hidden.map(i=>ps[i]).filter(Boolean);
+          return h('div',{className:'dq dq-bar',ref:root,style:{'--dq-natural-width':fit.naturalWidth===null?'max-content':`${Math.max(28,fit.naturalWidth)}px`},'aria-label':t('title')},
+            !ps.length?h('button',{type:'button',className:'dq-chip dq-more',onClick:e=>click(e),...dialogProps('empty'),'aria-label':t('open')},h(Icon,{size:14}),h('span',{className:'dq-chip-label'},t(s.error?'error':s.data?'quotaShort':'loading'))):fit.visible.map(i=>ps[i]).filter(Boolean).map(p=>h('button',{type:'button',className:'dq-chip',key:p.id,'data-provider-id':p.id,onClick:e=>click(e),...dialogProps(`provider:${p.id}`),'aria-label':`${p.name}: ${summary(p)}. ${stat(p)}. ${t('open')}`,'aria-describedby':s.hover?.p.id===p.id?'dq-quota-tooltip':undefined,onMouseEnter:e=>!state.overlay&&publish({hover:{p,anchor:e.currentTarget.getBoundingClientRect(),trigger:e.currentTarget}}),onMouseLeave:()=>publish({hover:null}),onFocus:e=>!state.overlay&&publish({hover:{p,anchor:e.currentTarget.getBoundingClientRect(),trigger:e.currentTarget}}),onBlur:()=>publish({hover:null})},...content(p))),
+            hidden.length>0&&h('button',{type:'button',className:'dq-chip dq-more',onClick:e=>click(e,hidden.map(p=>p.id)),...dialogProps('overflow'),'aria-label':`${t('moreProviders')}: ${hidden.length}. ${hidden.map(p=>p.name).join(', ')}`},`+${hidden.length}`),
+            h('span',{className:'dq-measure','aria-hidden':true,inert:''},h('span',{ref:measure,style:{display:'flex',gap:8}},ps.map(p=>h('span',{key:p.id,className:'dq-chip'},...content(p)))),h('span',{className:'dq-chip',ref:more},`+${ps.length}`)));
         }
         function Overlay() {
           const s=useQuota(), pop=useRef(null);
@@ -209,13 +330,25 @@ window.__ModuleLoader__.load({
               if(state.overlay&&pop.current&&!pop.current.contains(e.target)&&!state.overlay.trigger?.contains(e.target))close(false);
             };
             const scroll=e=>{if(!pop.current?.contains(e.target))close(false);};
-            const resize=()=>close(false);
+            const resize=()=>close(true);
             document.addEventListener('keydown',key);
             document.addEventListener('pointerdown',outside);
             document.addEventListener('focusin',outside);
             document.addEventListener('scroll',scroll,true);
             window.addEventListener('resize',resize);
+            // ResizeObserver cannot detect position-only movement when a sidebar opens.
+            // Watch only this plugin's own opener, and only while its surface is visible.
+            const trigger=state.overlay?.trigger??state.hover?.trigger;
+            let frame;
+            const checkAnchor=()=>{
+              if(!trigger?.isConnected){close(false);return;}
+              const rect=trigger.getBoundingClientRect();
+              if(['left','top','bottom'].some(key=>Math.abs(rect[key]-a[key])>.5)){close(!!state.overlay);return;}
+              frame=requestAnimationFrame(checkAnchor);
+            };
+            frame=requestAnimationFrame(checkAnchor);
             return()=>{
+              cancelAnimationFrame(frame);
               document.removeEventListener('keydown',key);
               document.removeEventListener('pointerdown',outside);
               document.removeEventListener('focusin',outside);
@@ -229,11 +362,11 @@ window.__ModuleLoader__.load({
             const checked=date(s.data?.updatedAt);
             return h('div',{className:'dq dq-surface dq-pop',id:'dq-quota-popover',ref:pop,role:'dialog','aria-label':t('title'),tabIndex:-1,style},
               h('header',{className:'dq-surface-head'},
-                h('div',{className:'dq-surface-title'},h(Icon,{size:16}),h('h3',null,t('title'))),
+                h('div',{className:'dq-surface-title'},h(Icon,{size:16}),h('h3',null,t(s.overlay.hiddenIds?'moreProviders':'title'))),
                 h('div',{className:'dq-actions'},
                   h(Button,{className:'dq-btn dq-iconbtn','aria-label':t('refresh'),title:t('refresh'),onClick:()=>load(true),disabled:s.busy},'↻'),
                   h(Button,{className:'dq-btn dq-iconbtn','aria-label':t('close'),title:t('close'),onClick:()=>close()},'×'))),
-              h('div',{className:'dq-surface-body'},h(ErrorNotice),h(Providers,{compact:true})),
+              h('div',{className:'dq-surface-body'},h(ErrorNotice),s.overlay.hiddenIds?h(OverflowProviders,{ids:s.overlay.hiddenIds}):h(Providers,{compact:true})),
               h('footer',{className:'dq-surface-foot'},
                 h('span',{className:'dq-caption',role:'status'},s.busy?t('refreshing'):checked?`${t('checked')} ${checked.toLocaleTimeString(locale,{hour:'2-digit',minute:'2-digit'})}`:''),
                 h(Button,{className:'dq-btn dq-link',onClick:openPage},t('open'),' →')));

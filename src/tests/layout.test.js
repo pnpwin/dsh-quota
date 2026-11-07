@@ -26,7 +26,7 @@ test('all executable source and documentation generators live under src', async 
   assert.match(manifest.scripts.test, /src\/tests\//);
 });
 
-test('quota dock entry precedes activity statistics (turns/steps/speed) and usage without claiming full width', async () => {
+test('quota dock entry precedes activity and aligns its last visible provider toward session statistics', async () => {
   const source = await readFile(path.join(root, 'src/client.js'), 'utf8');
   const match = source.match(/register\('conversation\.composer\.dock',\{id:'local-llm-quota',order:(-?[\d.]+)\},Bar\)/);
   assert.ok(match);
@@ -34,6 +34,8 @@ test('quota dock entry precedes activity statistics (turns/steps/speed) and usag
   // A value between 0 and 1 still leaves quotas to the RIGHT of session statistics.
   assert.ok(Number(match[1]) < 0, 'Quotas must precede activity at order 0, not merely usage at order 1');
   const rule = source.match(/\.dq-bar\{([^}]+)\}/)[1];
-  assert.match(rule, /justify-content:flex-start/);
+  assert.match(rule, /justify-content:flex-end/);
+  assert.doesNotMatch(rule, /row-reverse|direction:rtl/);
+  assert.match(rule, /flex-wrap:nowrap/);
   assert.doesNotMatch(rule, /(?:^|;)width:100%/);
 });

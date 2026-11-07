@@ -49,6 +49,16 @@ test('English documentation and descriptions remain the defaults with Russian ke
   assert.ok(readme.includes('English is the default language'));
   assert.match(russian,/^# Квоты LLM для DeepSeek Harness/m);
   assert.ok(manifest.files.includes('README.ru.md'));
+  assert.ok(manifest.files.includes('CHANGELOG.md'));
+  assert.match(manifest.version,/^\d+\.\d+\.\d+$/);
+  const changelog=await readFile(new URL('CHANGELOG.md',root),'utf8');
+  const client=await readFile(new URL('src/client.js',root),'utf8');
+  const diagnostics=await readFile(new URL('src/layout-diagnostics.js',root),'utf8');
+  for(const text of [readme,russian,changelog])assert.ok(text.includes(`github:pnpwin/dsh-quota#v${manifest.version}`));
+  assert.ok(changelog.includes(`## ${manifest.version} —`));
+  assert.ok(client.includes(`reportLayout({version:'${manifest.version}'`));
+  assert.ok(diagnostics.includes(`LAYOUT_VERSION = '${manifest.version}'`));
+  assert.doesNotMatch(readme+russian,/1\.1\.0-local|unpublished local|неопубликованное локальное/);
   for(const text of [manifest.description,locale.meta.title,locale.meta.description]) {
     assert.ok(typeof text==='string' && text.length>0);
     assert.doesNotMatch(text,/[\u0400-\u04ff]/);

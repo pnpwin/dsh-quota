@@ -1,6 +1,6 @@
 {
   "name": "@pnpwin/dsh-quota",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Provider balances and subscription quota windows using only Models settings credentials",
   "author": "pnpwin",
   "repository": { "type": "git", "url": "git+https://github.com/pnpwin/dsh-quota.git" },
@@ -11,7 +11,7 @@
   "type": "module",
   "license": "MIT",
   "exports": { ".": "./src/index.js", "./client": "./src/client.js", "./locale/*.json": "./locale/*.json", "./icon": "./icon.svg" },
-  "files": ["src/**/*.js", "src/docs/*.py", "docs/images/*.png", "cordis.patch.yml", "locale/*.json", "icon.svg", "README.md", "README.ru.md", "LICENSE"],
-  "scripts": { "test": "node --test src/tests/*.test.js", "check": "node --check src/index.js && node --check src/backend.js && node --check src/providers.js && node --check src/client.js" },
+  "files": ["src/**/*.js", "src/docs/*.py", "docs/images/*.png", "cordis.patch.yml", "locale/*.json", "icon.svg", "README.md", "README.ru.md", "CHANGELOG.md", "LICENSE"],
+  "scripts": { "test": "node --test src/tests/*.test.js", "check": "node --check src/index.js && node --check src/backend.js && node --check src/providers.js && node --check src/layout-diagnostics.js && node --check src/client.js" },
   "dsh": { "bundle": { "patch": "./cordis.patch.yml" }, "client": { "platform": "web", "immediately": true, "inject": ["@deepseek-ai/dsh-client-ui-conversation", "@deepseek-ai/dsh-client-ui-settings", "@deepseek-ai/dsh-client-locale", "@deepseek-ai/dsh-client-ui-layout"] } }
 }

@@ -1,5 +1,6 @@
 import { createQuotaBackend, safeError, SETTINGS_SCHEMA } from './backend.js';
 import { QuotaError } from './providers.js';
+import { createLayoutDiagnostics, LAYOUT_SAMPLE_SCHEMA } from './layout-diagnostics.js';
 
 export const inject = ['connection', 'llm', 'settings', 'credentials', 'tools'];
 export { createQuotaBackend } from './backend.js';
@@ -28,6 +29,7 @@ export const SNAPSHOT_SCHEMA = {
     } },
     settings: { ...SETTINGS_SCHEMA, required: Object.keys(SETTINGS_SCHEMA.properties) },
     updatedAt: string,
+    layout: { type: 'array', items: LAYOUT_SAMPLE_SCHEMA, description: 'Last 8 anonymous browser layout reports received in this plugin instance; no persisted history.' },
   },
 };
 const ERROR_SCHEMA = { type: 'object', additionalProperties: false, required: ['error'], properties: {
@@ -57,7 +59,9 @@ async function bodyPatch(request) {
 }
 export function apply(ctx, config = {}) {
   const backend = createQuotaBackend(ctx, config);
-  ctx.effect(() => () => backend.dispose());
+  const layout = createLayoutDiagnostics();
+  const snapshot = async (force = false) => ({ ...await (force ? backend.refresh() : backend.snapshot()), layout: layout.read() });
+  ctx.effect(() => () => { backend.dispose(); layout.dispose(); });
   const handle = operation => async request => {
     try { return json(await operation(request)); }
     catch (error) {
@@ -66,9 +70,10 @@ export function apply(ctx, config = {}) {
     }
   };
   for (const route of [
-    { path: '/api/llm-quota/snapshot', methods: ['GET'], requestBody: 'buffered', fetch: handle(() => backend.snapshot()) },
-    { path: '/api/llm-quota/refresh', methods: ['POST'], requestBody: 'buffered', fetch: handle(() => backend.refresh()) },
+    { path: '/api/llm-quota/snapshot', methods: ['GET'], requestBody: 'buffered', fetch: handle(() => snapshot()) },
+    { path: '/api/llm-quota/refresh', methods: ['POST'], requestBody: 'buffered', fetch: handle(() => snapshot(true)) },
     { path: '/api/llm-quota/settings', methods: ['POST'], requestBody: 'buffered', fetch: handle(async request => backend.updateSettings(await bodyPatch(request))) },
+    { path: '/api/llm-quota/layout', methods: ['POST'], requestBody: 'buffered', fetch: handle(async request => layout.accept(await bodyPatch(request))) },
   ]) ctx.effect(() => ctx.connection.fetch.register(route));
 
   ctx.effect(() => ctx.tools.register({
@@ -91,7 +96,7 @@ export function apply(ctx, config = {}) {
       try {
         if (!args || !['read', 'refresh', 'settings'].includes(args.action) || Object.keys(args).some(key => !['action', 'patch'].includes(key)) || (args.action !== 'settings' && args.patch !== undefined)) throw new QuotaError('invalid-settings');
         if (args.action === 'settings') return await backend.updateSettings(args.patch);
-        return await (args.action === 'refresh' ? backend.refresh() : backend.snapshot());
+        return await snapshot(args.action === 'refresh');
       } catch (error) { return { error: safeError(error, 'invalid-settings') }; }
     },
   }));

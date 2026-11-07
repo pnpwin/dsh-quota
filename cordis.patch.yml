@@ -8,3 +8,6 @@
         refreshSeconds: 300
         disabledProviders: []
         resetFormat: relative
+        lowBalanceThresholds:
+          USD: 1
+          CNY: 7

@@ -3,6 +3,7 @@ import { adapterFor, fetchQuota, QuotaError, requestJSON } from './providers.js'
 export const DEFAULT_SETTINGS = Object.freeze({
   showBar: true, mode: 'all', showReset: true, refreshSeconds: 300,
   disabledProviders: Object.freeze([]), resetFormat: 'relative',
+  lowBalanceThresholds: Object.freeze({ USD: 1, CNY: 7 }),
 });
 export const SETTINGS_SCHEMA = {
   type: 'object', additionalProperties: false,
@@ -11,6 +12,13 @@ export const SETTINGS_SCHEMA = {
     showReset: { type: 'boolean' }, refreshSeconds: { type: 'integer', description: 'Refresh interval in seconds, from 60 to 3600.' },
     disabledProviders: { type: 'array', items: { type: 'string' }, description: 'Configured provider ids excluded from network checks.' },
     resetFormat: { type: 'string', enum: ['relative', 'absolute'] },
+    lowBalanceThresholds: {
+      // DSH Tool output schemas support only boolean additionalProperties.
+      // The shared operation validates currency keys, map size and numeric bounds strictly.
+      type: 'object', additionalProperties: true,
+      default: { ...DEFAULT_SETTINGS.lowBalanceThresholds },
+      description: 'Explicit low-balance thresholds: at most 32 uppercase three-letter ISO currency keys with finite numeric values from 0 to 1e12; replaces the map. Default USD 1 and CNY 7 are manual equivalents, not live FX. An empty map disables balance deprioritization.',
+    },
   },
 };
 const REASONS = Object.freeze({
@@ -40,7 +48,7 @@ export function safeError(error, fallback = 'network-error') {
 }
 function isObject(value) { return value !== null && typeof value === 'object' && !Array.isArray(value); }
 export function validatePatch(patch) {
-  if (!isObject(patch) || Object.keys(patch).length > 6) throw new QuotaError('invalid-settings');
+  if (!isObject(patch) || Object.keys(patch).length > Object.keys(DEFAULT_SETTINGS).length) throw new QuotaError('invalid-settings');
   const clean = {};
   for (const [key, value] of Object.entries(patch)) {
     if (!Object.hasOwn(DEFAULT_SETTINGS, key)) throw new QuotaError('invalid-settings');
@@ -49,7 +57,12 @@ export function validatePatch(patch) {
     if (key === 'resetFormat' && !['relative', 'absolute'].includes(value)) throw new QuotaError('invalid-settings');
     if (key === 'refreshSeconds' && (!Number.isInteger(value) || value < 60 || value > 3600)) throw new QuotaError('invalid-settings');
     if (key === 'disabledProviders' && (!Array.isArray(value) || value.length > 100 || value.some(id => typeof id !== 'string' || !id.length || id.length > 256 || /[\x00-\x1f]/.test(id)))) throw new QuotaError('invalid-settings');
-    clean[key] = Array.isArray(value) ? [...new Set(value)] : value;
+    if (key === 'lowBalanceThresholds') {
+      if (!isObject(value) || ![Object.prototype, null].includes(Object.getPrototypeOf(value))) throw new QuotaError('invalid-settings');
+      const entries = Object.entries(value);
+      if (entries.length > 32 || entries.some(([currency, threshold]) => currency.length !== 3 || !/^[A-Z]{3}$/.test(currency) || typeof threshold !== 'number' || !Number.isFinite(threshold) || threshold < 0 || threshold > 1e12)) throw new QuotaError('invalid-settings');
+      clean[key] = Object.fromEntries(entries);
+    } else clean[key] = Array.isArray(value) ? [...new Set(value)] : value;
   }
   return clean;
 }
@@ -141,7 +154,11 @@ function failedRow(base, code, previous, checkedAt, now = Date.now()) {
 
 /** Shared application operations for HTTP and tools. Dependencies are injectable solely for isolated tests. */
 export function createQuotaBackend(ctx, config = {}, deps = {}) {
-  let settings = { ...DEFAULT_SETTINGS, ...validatePatch(config), disabledProviders: [...(config.disabledProviders ?? [])] };
+  const initialSettings = validatePatch(config);
+  let settings = {
+    ...DEFAULT_SETTINGS, ...initialSettings, disabledProviders: [...(initialSettings.disabledProviders ?? [])],
+    lowBalanceThresholds: { ...(initialSettings.lowBalanceThresholds ?? DEFAULT_SETTINGS.lowBalanceThresholds) },
+  };
   const now = deps.now ?? Date.now;
   const request = deps.request ?? requestJSON;
   let cache;

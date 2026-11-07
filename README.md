@@ -36,13 +36,33 @@ Pillow is only needed for generating documentation images, not for installing or
 
 ## Features
 
-- Compact provider chips to the left of Session statistics, below the composer.
-- Hover/focus details, a click-to-open widget, and a full panel in the sidebar.
-- Settings for visibility, all providers / lowest quota, reset formatting, refresh interval and provider switches.
+- Adaptive single-line provider indicators to the left of Session statistics, below the composer; no strip borders or background.
+- When space is limited, `+N` opens a compact list of hidden providers. Hover/focus details, the all-provider widget, and the full sidebar panel remain available.
+- Settings for visibility, all providers / lowest quota, reset formatting, refresh interval, provider switches and per-currency low-balance thresholds. Reset countdowns live in compact details, not the strip.
 - Alphabetical account ordering by display name, case-insensitive with natural number ordering.
 - The agent's `quota_status` tool shares the same read, refresh and settings operations as the UI.
 
 Balances, API-key budgets and subscription windows are different metrics. Currencies, independent accounts and windows are never summed. Missing values are not presented as zero.
+
+### Adaptive overflow and low balances
+
+Only accounts that do not fit are hidden. Accounts with a known **0% remaining** in any quota window, or **all** reported balances strictly below their configured currency thresholds, are hidden first. Within each priority tier, removal proceeds from the end; visible accounts keep their alphabetical order. Wide containers show every enabled provider, including exhausted ones. Errors, stale data, unsupported accounts, missing metrics and currencies without thresholds are never classified as zero.
+
+Settings → LLM quotas → **Low-balance thresholds** provides editable values for USD, CNY and each reported currency. Defaults are **USD 1** and **CNY 7**, manual approximate equivalents, not live FX quotes. A balance exactly at its threshold is not low. A funded CNY balance keeps DeepSeek in the normal tier even when its USD balance is zero. Balances are not added across currencies. Empty inputs disable that currency. The same preferences are exposed to agents:
+
+```json
+{"action":"settings","patch":{"lowBalanceThresholds":{"USD":1,"CNY":7,"EUR":0.9}}}
+```
+
+The map replaces all previous thresholds; `{}` disables balance-based deprioritization but not zero-quota prioritization. Existing settings migrate to defaults when this field is absent. The strip uses its own measured container, local text measurements, resize observation and font readiness rather than monitor detection or host DOM inspection.
+
+The adaptive dock sizing accounts for DSH's public `data-slot` outlet anchor, including its `display:contents` wrapper. The strip retains a measured nonzero intrinsic basis, preventing collapse inside content-sized containers. A narrowly scoped owner rule allocates available composer width only while quota is visible; no app files, hashed class names or parent DOM traversal are used.
+
+For troubleshooting, `quota_status` read/refresh also returns `layout`: up to eight anonymous live measurements retained in Host memory only. They include viewport/own-element/chip widths, visible/hidden counts and flex factors, but no account names, IDs, paths or credentials. Reporting does not query providers or persist history. These measurements are not a substitute for visual acceptance.
+
+Provider indicators are right-aligned inside the adaptive quota allocation (`justify-content:flex-end`). The last provider or `+N` stays next to Session statistics, with spare width to the left; provider ordering and overflow priority are unchanged.
+
+See [Changelog](CHANGELOG.md) for version 1.1.0. The illustrations above predate adaptive overflow and are not visual verification of the current strip.
 
 ## Provider support
 
@@ -72,10 +92,10 @@ Kimi may report the same five-hour Session in both `usages.limit_5h` and an unsc
 
 ## Install from GitHub
 
-Install `github:pnpwin/dsh-quota#v1.0.1` through Plugins or ask the DSH agent to run:
+Install `github:pnpwin/dsh-quota#v1.1.0` through Plugins or ask the DSH agent to run:
 
 ```json
-{"action":"install_bundle","target":"github:pnpwin/dsh-quota#v1.0.1"}
+{"action":"install_bundle","target":"github:pnpwin/dsh-quota#v1.1.0"}
 ```
 
 Use a full commit SHA instead of the tag for immutable pinning. Do not activate the local and GitHub bundles simultaneously: they provide the same slots and tool.
@@ -92,11 +112,11 @@ npm run check
 npm pack --dry-run
 ```
 
-Tests use `node:test` with synthetic fixtures and mocked network / credential services. They cover parsers, endpoint and credential boundaries, caching, settings persistence, layout contracts, floating geometry, image metadata and documentation links. They make no paid provider calls. Historical live checks confirmed DeepSeek, Codex and Z.ai responses; illustrative images are **not** browser-render verification, and light/dark-theme visual acceptance remains separate.
+The 1.1.0 suite has **80 tests**, using `node:test`, synthetic fixtures and mocked network / credential services. Coverage includes parsers, endpoint and credential boundaries, caching, settings persistence, adaptive layout contracts, anonymous diagnostics, floating geometry, image metadata and documentation links. Tests make no paid provider calls. Live Desktop measurements confirmed adaptive visibility, and the final right-aligned placement was accepted through user review. This is not automated multi-monitor or light/dark-theme visual coverage; illustrative images are **not** browser-render verification.
 
 No context-saving or token-reduction benchmark is claimed. Byte sizes, synthetic counters and heuristic estimates are not actual provider-reported token measurements. Provider quota data in the running plugin comes from provider endpoints, not from these example images or a session-token estimate.
 
-The current suite has 53 tests. Version 1.0.1 adds Kimi mixed-schema regressions covering duplicate Session windows, invalid-data fallback, reset metadata, boundary values and independent scopes. Changing display settings remounts the Host plugin, so an already-running agent turn may need a fresh turn to regain its newly registered tool definition.
+The suite includes adaptive overflow, currency-threshold validation/persistence, and Kimi mixed-schema regressions covering duplicate Session windows, invalid-data fallback, reset metadata, boundary values and independent scopes. Pure fit/priority tests and CSS contract checks are not browser layout or multi-monitor verification. Changing display settings remounts the Host plugin, so an already-running agent turn may need a fresh turn to regain its newly registered tool definition.
 
 ## References
 
