@@ -1,0 +1,9 @@
+node_modules/
+.npm*/
+.pnpm-store/
+coverage/
+*.tgz
+.DS_Store
+.env
+.env.*
+*.local

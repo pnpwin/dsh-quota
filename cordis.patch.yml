@@ -1,0 +1,10 @@
+- insert:
+    - id: pnpwin-llm-quota
+      name: '@pnpwin/dsh-quota'
+      config:
+        showBar: true
+        mode: all
+        showReset: true
+        refreshSeconds: 300
+        disabledProviders: []
+        resetFormat: relative

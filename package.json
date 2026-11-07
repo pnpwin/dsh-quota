@@ -1,0 +1,17 @@
+{
+  "name": "@pnpwin/dsh-quota",
+  "version": "1.0.0",
+  "description": "Provider balances and subscription quota windows using only Models settings credentials",
+  "author": "pnpwin",
+  "repository": { "type": "git", "url": "git+https://github.com/pnpwin/dsh-quota.git" },
+  "homepage": "https://github.com/pnpwin/dsh-quota#readme",
+  "bugs": { "url": "https://github.com/pnpwin/dsh-quota/issues" },
+  "keywords": ["deepseek-harness", "dsh", "cordis", "llm", "quota", "balance"],
+  "engines": { "node": ">=22" },
+  "type": "module",
+  "license": "MIT",
+  "exports": { ".": "./src/index.js", "./client": "./src/client.js", "./locale/*.json": "./locale/*.json", "./icon": "./icon.svg" },
+  "files": ["src/**/*.js", "cordis.patch.yml", "locale/*.json", "icon.svg", "README.md", "LICENSE"],
+  "scripts": { "test": "node --test src/tests/*.test.js", "check": "node --check src/index.js && node --check src/backend.js && node --check src/providers.js && node --check src/client.js" },
+  "dsh": { "bundle": { "patch": "./cordis.patch.yml" }, "client": { "platform": "web", "immediately": true, "inject": ["@deepseek-ai/dsh-client-ui-conversation", "@deepseek-ai/dsh-client-ui-settings", "@deepseek-ai/dsh-client-locale", "@deepseek-ai/dsh-client-ui-layout"] } }
+}
