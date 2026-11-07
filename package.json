@@ -11,7 +11,7 @@
   "type": "module",
   "license": "MIT",
   "exports": { ".": "./src/index.js", "./client": "./src/client.js", "./locale/*.json": "./locale/*.json", "./icon": "./icon.svg" },
-  "files": ["src/**/*.js", "cordis.patch.yml", "locale/*.json", "icon.svg", "README.md", "LICENSE"],
+  "files": ["src/**/*.js", "src/docs/*.py", "docs/images/*.png", "cordis.patch.yml", "locale/*.json", "icon.svg", "README.md", "README.ru.md", "LICENSE"],
   "scripts": { "test": "node --test src/tests/*.test.js", "check": "node --check src/index.js && node --check src/backend.js && node --check src/providers.js && node --check src/client.js" },
   "dsh": { "bundle": { "patch": "./cordis.patch.yml" }, "client": { "platform": "web", "immediately": true, "inject": ["@deepseek-ai/dsh-client-ui-conversation", "@deepseek-ai/dsh-client-ui-settings", "@deepseek-ai/dsh-client-locale", "@deepseek-ai/dsh-client-ui-layout"] } }
 }

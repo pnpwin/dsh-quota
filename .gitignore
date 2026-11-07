@@ -2,6 +2,8 @@ node_modules/
 .npm*/
 .pnpm-store/
 coverage/
+__pycache__/
+*.pyc
 *.tgz
 .DS_Store
 .env

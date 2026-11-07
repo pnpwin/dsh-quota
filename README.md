@@ -1,56 +1,84 @@
-# Квоты LLM для DeepSeek Harness
+# LLM quotas for DeepSeek Harness
 
-[GitHub](https://github.com/pnpwin/dsh-quota) · MIT · Host + Web Client · весь исполняемый код в [src](src/)
+English · [Русский](README.ru.md) · MIT · Host + Web Client
 
-**Источник вдохновения — [hermes-quota-plugin](https://github.com/rarf/hermes-quota-plugin/) от [rarf](https://github.com/rarf).** Оттуда взяты идея строки квот, подсказок и многоуровневого виджета, а также сведения о контрактах API провайдеров. Это самостоятельная реализация для DSH: механизм поиска авторизации Hermes не переносился. Сохраняется атрибуция MIT, © 2026 rarf.
+**Inspired by [hermes-quota-plugin](https://github.com/rarf/hermes-quota-plugin/) by [rarf](https://github.com/rarf).** The status chips, layered quota views and provider API research informed this independent DSH implementation. Hermes credential discovery is deliberately not included. MIT attribution: © 2026 rarf.
 
-Постоянный Host + Web Client плагин. Использует **только провайдеров и сохранённую авторизацию Settings → Models**; ничего не импортирует из Hermes и внешних CLI.
+Show provider balances and subscription limits using **only providers and stored authorization configured in Settings → Models**. Credentials stay on the Host.
 
-## Где находится
+## Interface
 
-1. Под полем ввода сессии, слева от Session statistics: краткие провайдеры, баланс либо минимальный остаток окна в процентах. Кольцо означает **остаток**, не расход. Цвет и текст отражают доступность/свежесть.
-2. Наведение мыши или фокус клавиатуры: подробности всех окон, валют и времени сброса.
-3. Нажатие на провайдера: компактный виджет. Escape, кнопка закрытия и клик снаружи закрывают его.
-4. «Открыть квоты» либо пункт «Квоты LLM» в левом меню: большая панель с отдельными карточками.
-5. Settings → «Квоты LLM» или «Настройки» в панели: строка квот, режим «все / минимальная», время сброса, относительные/точные даты, интервал 60–3600 секунд и включённые провайдеры. Настройки общие для текущего профиля и сохраняются через Config editor.
+> **Generated illustrations, not real account screenshots.** All `Provider A/B/C` labels, balances, percentages, timings and conversation statistics are fictional. Real account names, identifiers, emails, tokens, session titles and file paths are never used. Illustrations show the light theme; the installed plugin follows the DSH theme.
 
-Агент получает инструмент `quota_status`: чтение, обновление и изменение тех же настроек через общую backend-операцию. Ключи инструмент не возвращает.
+### Quota strip in the conversation
 
-## Подход и границы
+![Conversation quota strip with fictional provider labels and metrics](docs/images/dialog-quota-strip.png)
 
-Универсального API квот нет. Бюджет API-ключа, баланс аккаунта и лимит подписки — разные величины. Мы не вычисляем квоту из числа токенов сессии и не называем неизвестные значения нулём. Валюты, окна и аккаунты не суммируются. Прогнозы расхода и уведомления из скриншотов Hermes не копируются: они не нужны для пяти запрошенных поверхностей квот.
+### Compact widget
 
-Приоритет: прямые read-only API провайдеров → явное сообщение об отсутствии доступа/API. Скрейпинг кабинетов, чтение CLI-файлов и сбор cookies отвергнуты как несовместимые с ограничением источника авторизации. Учёт затрат самой сессии тоже не заменяет остаток провайдерской подписки.
+<img src="docs/images/quota-widget.png" alt="Compact quota widget with fictional labels and metrics only" width="452">
 
-### Проверенные контракты
+### Full quota panel
 
-| Провайдер | Что можно получить | Ограничения |
+![Full quota panel with fictional providers and values](docs/images/quota-overview.png)
+
+Images are generated from fixed fictional data by the [documentation generator](src/docs/generate_previews.py). It does not read Models settings, authorization or source screenshots. To regenerate, use Python with Pillow:
+
+```sh
+python src/docs/generate_previews.py
+```
+
+Pillow is only needed for generating documentation images, not for installing or running the plugin.
+
+## Features
+
+- Compact provider chips to the left of Session statistics, below the composer.
+- Hover/focus details, a click-to-open widget, and a full panel in the sidebar.
+- Settings for visibility, all providers / lowest quota, reset formatting, refresh interval and provider switches.
+- Alphabetical account ordering by display name, case-insensitive with natural number ordering.
+- The agent's `quota_status` tool shares the same read, refresh and settings operations as the UI.
+
+Balances, API-key budgets and subscription windows are different metrics. Currencies, independent accounts and windows are never summed. Missing values are not presented as zero.
+
+## Provider support
+
+| Provider | Available metrics | Limitations |
 |---|---|---|
-| DeepSeek | Отдельные балансы CNY/USD | Не лимит подписки и не per-key budget |
-| Moonshot global / CN | API balance USD / CNY | Не Kimi Coding; регионы не взаимозаменяемы |
-| Kimi Coding | Окна `/coding/v1/usages` с сохранённым API-ключом | Не обычный Moonshot API balance; OAuth этого провайдера в v1 не подключён |
-| OpenAI Codex | Лимиты окон и credits | Нужен сохранённый OAuth именно Codex; API key не заменяет подписку |
-| Z.ai / Zhipu | Coding-plan quota, отдельные региональные endpoints | Monitor endpoint, контракт может меняться |
-| OpenRouter | Остаток/лимит конкретного ключа | Не баланс общего кошелька |
+| DeepSeek | Separate CNY / USD balances | API credit balance, not a subscription or per-key cap |
+| Moonshot global / CN | Regional API balance | Not Kimi Coding; keys are not tried across regions |
+| Kimi Coding | Usage windows | Stored API key; its OAuth flow is not connected in v1 |
+| OpenAI Codex | Quota windows and credits | Requires a stored Codex OAuth grant, not an ordinary OpenAI key |
+| Z.ai / Zhipu | Coding-plan limits | Regional monitor endpoints; contracts may change |
+| OpenRouter | Budget remaining for the configured key | Not the shared account wallet |
 
-Список фактически реализованных адаптеров задаёт [providers.js](src/providers.js). Остальные настроенные провайдеры видны с явным статусом неподдерживаемого API/авторизации, а не фиктивными показателями. DeepSeek Account (вход в сам DSH) не используется вместо API-ключа Models. Sign in with ChatGPT для OpenAI Responses — другой OAuth flow, не Codex.
+See [provider adapters](src/providers.js) for the implemented contracts. Other configured providers show an explicit unsupported or authentication status instead of invented metrics. DeepSeek Account sign-in and the OpenAI Responses “Sign in with ChatGPT” flow are not substitutes for these API credentials.
 
-## Безопасность и актуальность
+## Privacy and safety
 
-- Провайдеры обнаруживаются через `llm.listConfigurableProviders()` и адресуемые профили `settings.describe()`, как на странице Models. Dormant-каталог не считается настроенным аккаунтом.
-- API key читается только по привязанной к Models ссылке и только при подтверждённом сохранённом источнике. `env`, `.env`, CLI auth files, браузерные cookies, keychain и другие внешние источники не используются.
-- OAuth читается только из записи настроенного провайдера Models. Плагин не меняет и не обновляет refresh tokens; просроченный вход требует повторной авторизации через Models или обновления токена владельцем адаптера.
-- В браузер и tool output поступают только нормализованные метрики, разрешённые названия и безопасные сообщения ошибок, без токенов, email из JWT и сырых тел ошибок.
-- HTTPS-запросы идут на фиксированные разрешённые endpoints; произвольные прокси и кастомные URL не запрашиваются. Redirects не выполняются. Ключи не перебираются между регионами.
-- Проверки кешируются; ручное обновление имеет ограничение частоты. Таймаут и размер ответа ограничены. При временном сбое последние данные явно помечаются устаревшими; после истечения срока не выдаются за актуальные.
-- Отключение провайдера в настройках квот не меняет Models. Настройки и данные разделяются на уровне текущего DSH-профиля, не сессии.
-- Никаких новых LLM-запросов: проверяются только баланс/usage endpoints.
+- Providers come from the configurable Models directory and their corresponding settings profiles.
+- Only explicitly stored Models references / provider-owned records are read. Environment fallbacks, `.env`, CLI files, cookies and OS credential discovery are not used.
+- OAuth grants are never refreshed or modified by this plugin. Expired credentials require sign-in through Models or refresh by their owning adapter.
+- Tokens, JWT emails and raw provider error bodies never reach the browser or tool output.
+- Fixed HTTPS endpoint allowlists, no redirects or arbitrary proxy URLs, bounded responses and timeouts.
+- Cached checks, manual-refresh cooldown, bounded concurrency and explicit stale-data status.
+- Display preferences are profile-wide. Disabling a quota check does not modify Models.
+- No paid LLM completion requests are made to check quotas.
 
-## Разработка и установка
+## Install from GitHub
 
-Весь исполняемый код находится в [src](src/): [Host entry](src/index.js), [backend](src/backend.js), [адаптеры](src/providers.js), [Web Client](src/client.js) и [тесты](src/tests/). В корне остаются только манифест, patch, документация и ресурсы. Экспорты пакета ведут непосредственно в [src](src/).
+Install `github:pnpwin/dsh-quota#v1.0.0` through Plugins or ask the DSH agent to run:
 
-Аккаунты во всех списках (строка сессии, компактный виджет, большая панель и настройки) сортируются по отображаемому имени, без учёта регистра; числа сравниваются естественным образом. Сортировка не скрывает аккаунты и не меняет настройки Models.
+```json
+{"action":"install_bundle","target":"github:pnpwin/dsh-quota#v1.0.0"}
+```
+
+Use a full commit SHA instead of the tag for immutable pinning. Do not activate the local and GitHub bundles simultaneously: they provide the same slots and tool.
+
+The plugin requires no build, install scripts or external runtime dependencies. Follow the manager's `application`, warnings and `nextStep`; replacing loaded backend modules may require a restart. Refreshing the browser alone does not update Host code.
+
+## Development and verification
+
+All executable code is under [src](src/): [Host entry](src/index.js), [backend](src/backend.js), [Web Client](src/client.js), [provider adapters](src/providers.js), [tests](src/tests/) and the [documentation generator](src/docs/generate_previews.py). The root contains only manifests, DSH resources and documentation.
 
 ```sh
 npm test
@@ -58,38 +86,18 @@ npm run check
 npm pack --dry-run
 ```
 
-### Установка из GitHub
+Tests use `node:test` with synthetic fixtures and mocked network / credential services. They cover parsers, endpoint and credential boundaries, caching, settings persistence, layout contracts, floating geometry, image metadata and documentation links. They make no paid provider calls. Historical live checks confirmed DeepSeek, Codex and Z.ai responses; illustrative images are **not** browser-render verification, and light/dark-theme visual acceptance remains separate.
 
-В DSH попросите агента установить bundle из `github:pnpwin/dsh-quota#v1.0.0` либо укажите этот spec в установке пакета через Plugins. Для инструмента `plugin_manager`:
+No context-saving or token-reduction benchmark is claimed. Byte sizes, synthetic counters and heuristic estimates are not actual provider-reported token measurements. Provider quota data in the running plugin comes from provider endpoints, not from these example images or a session-token estimate.
 
-```json
-{"action":"install_bundle","target":"github:pnpwin/dsh-quota#v1.0.0"}
-```
+The current suite has 46 tests. The immutable v1.0.0 runtime release originally shipped 43; subsequent documentation checks are on the main branch. Changing display settings remounts the Host plugin, so an already-running agent turn may need a fresh turn to regain its newly registered tool definition.
 
-Версия закреплена тегом; для воспроизводимой установки можно заменить тег на полный commit SHA. Пакет не требует сборки, внешних зависимостей или install-скриптов. Не устанавливайте одновременно локальный и GitHub bundle: они предоставляют одни и те же UI-слоты и инструмент `quota_status`.
+## References
 
-Для разработки используйте `git clone https://github.com/pnpwin/dsh-quota.git`, затем установите директорию через `plugin_manager`. Не редактируйте профиль вручную. Первичная установка может примениться сразу; если менеджер требует перезапуск, следуйте его `nextStep`. Замена уже загруженного backend-модуля требует нового поколения модулей/перезапуска приложения; сама перезагрузка страницы не обновляет backend.
-
-## Визуальный стиль
-
-Подсказки и компактный виджет используют нативную поверхность всплывающих панелей DSH: `--dsw-specific-menu`, `--dsw-menu-backdrop-filter`, `--dsw-elevation-prominent` и `--dsw-radius-lg` (с безопасными fallback). Это поверхность меню, не белый фон страницы. Значения метрик используют secondary-текст, названия и время сброса — tertiary. Внутренние отступы 16 px; во всплывающих окнах текст 12 px и строки «название — значение» с шагом 4 px, на основной панели — 13 px. Убраны цветной фон overlay, вложенные карточки, крупные цифры и круговые диаграммы из popup; маленькие кольца остаются только в строке сессии. Основная панель использует тот же плоский список с тонкими разделителями и небольшими полосами остатка.
-
-Ширина подсказки — до 320 px, компактного виджета — до 360 px. Положение рассчитывается по реальной высоте содержимого относительно нажатого индикатора: сверху с зазором 8 px, при нехватке места снизу; у краёв сохраняются поля. Длинные списки прокручиваются внутри, заголовок и действия остаются доступны. Полоса прокрутки вынесена точно на правую грань окна. Перед ней оставлено компактное внутреннее поле 16 px вместо прежнего чрезмерного запаса 32 px. На узких экранах сохраняется тот же запас, а вынос до грани рассчитывается через общий padding-токен. Используется `scrollbar-gutter: stable`. Escape, закрытие снаружи и возврат фокуса сохранены.
-
-## Проверка реализации
-
-43 unit/security/layout/geometry теста и синтаксические проверки проходят. Порядок строки квот: `local-llm-quota: -1` → `activity: 0` (Session statistics: ходы, шаги, скорость) → `usage: 1` (токены, cache hit, контекст). Предыдущий вариант `order: 0.5` ошибочно ставил квоты между двумя секциями; тест теперь проверяет расположение перед `activity`, а не только перед `usage`. После установки подтверждены активные регистрации строки сессии, popup, основной панели и раздела настроек в подключённом Client; живые запросы DeepSeek, Codex и Z.ai успешно вернули метрики. Сохранение настроек проверено штатным инструментом; изменённый тестовый режим восстановлен без перезаписи других пользовательских предпочтений.
-
-Визуальная приёмка (реальные клики/скриншоты, светлая и тёмная темы, отображение иконки) без управления подключённым браузером не выполнялась. Регистрация слотов не равнозначна визуальной приёмке.
-
-Изменение настроек пересоздаёт Host-экземпляр плагина. DSH может исключить прежнее определение `quota_status` из уже выполняющегося хода агента; в новом ходе инструмент доступен. Web UI использует новые HTTP handlers и не зависит от этого ограничения допуска инструментов.
-
-## Исследование
-
-- [Hermes quota plugin](https://github.com/rarf/hermes-quota-plugin), исследованный commit `39708d74349d482b568009835c54cd5b6a123d0c`; [провайдеры](https://github.com/rarf/hermes-quota-plugin/tree/39708d74349d482b568009835c54cd5b6a123d0c/quota_providers).
-- [Moonshot global balance](https://platform.kimi.ai/docs/api/balance.md), [Moonshot CN balance](https://platform.kimi.com/docs/api/balance.md).
+- [Hermes quota plugin](https://github.com/rarf/hermes-quota-plugin/), researched commit `39708d74349d482b568009835c54cd5b6a123d0c`.
 - [DeepSeek balance API](https://api-docs.deepseek.com/api/get-user-balance).
-- [OpenRouter key API](https://openrouter.ai/docs/api/reference/limits).
-- [ZCode quota contract](https://github.com/zai-org/zcode/blob/aac4755666d09fdcd70272fcf063c077a639015f/docs/bigmodel-coding-plan-usage-quota.md): требует raw API key в Authorization, тогда как Hermes использует Bearer; это расхождение учтено, но не означает универсальную стабильность monitor API.
+- [Moonshot global](https://platform.kimi.ai/docs/api/balance.md) / [CN](https://platform.kimi.com/docs/api/balance.md) balance APIs.
+- [OpenRouter limits](https://openrouter.ai/docs/api/reference/limits).
+- [ZCode quota contract](https://github.com/zai-org/zcode/blob/aac4755666d09fdcd70272fcf063c077a639015f/docs/bigmodel-coding-plan-usage-quota.md): raw API key authorization differs from the Bearer form observed in Hermes.
 
-Собственная реализация интерфейса и DSH-интеграции. Оригинальная SVG-иконка. Hermes распространяется по MIT, © 2026 rarf; его внешний поиск авторизации сознательно не переносился.
+Original DSH integration, UI and artwork. See [LICENSE](LICENSE).

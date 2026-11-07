@@ -6,14 +6,14 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 
-test('all package executable JavaScript including tests lives under src', async () => {
+test('all executable source and documentation generators live under src', async () => {
   async function walk(dir) {
     const paths = [];
     for (const entry of await readdir(dir, { withFileTypes: true })) {
       if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
       const full = path.join(dir, entry.name);
       if (entry.isDirectory()) paths.push(...await walk(full));
-      else if (/\.(?:js|mjs|cjs)$/.test(entry.name)) paths.push(path.relative(root, full));
+      else if (/\.(?:js|mjs|cjs|py)$/.test(entry.name)) paths.push(path.relative(root, full));
     }
     return paths;
   }
